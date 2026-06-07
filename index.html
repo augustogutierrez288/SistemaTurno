@@ -3,85 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Turnos - Oncología | Hospital Centro de Salud</title>
-    
+    <title>Gestión de Turnos - HCS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
     <style>
-        /* CSS3 Personalizado */
-        :root {
-            --primary-color: #0056b3;
-            --secondary-color: #e9ecef;
-        }
-        
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .navbar-custom {
-            background-color: var(--primary-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .navbar-custom .navbar-brand, 
-        .navbar-custom .nav-link {
-            color: #ffffff !important;
-        }
-
-        header.hero-section {
-            background: linear-gradient(135deg, var(--primary-color), #00a8ff);
-            color: white;
-            padding: 3rem 0;
-            margin-bottom: 2rem;
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .form-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        .btn-custom {
-            background-color: var(--primary-color);
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .btn-custom:hover {
-            background-color: #004494;
-            color: white;
-            transform: translateY(-2px);
-        }
+        :root { --primary-color: #0056b3; }
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+        .navbar-custom { background-color: var(--primary-color); }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link { color: #ffffff !important; }
+        header.hero-section { background: linear-gradient(135deg, var(--primary-color), #00a8ff); color: white; padding: 3rem 0; margin-bottom: 2rem; }
+        .form-container { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">
-                🏥 HCS Tucumán
-            </a>
-            <button class="navbar-toggler border-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
-            </button>
+            <a class="navbar-brand fw-bold" href="./index.html">🏥 HCS Tucumán</a>
+            <button class="navbar-toggler border-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon" style="filter: invert(1);"></span></button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Especialidades</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Profesionales</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contacto</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="./index.html">Inicio</a></li>
+                    <li class="nav-item d-none" id="navMisTurnos"><a class="nav-link" href="./pages/panel_paciente.html">🩺 Mis Turnos</a></li>
+                    <li class="nav-item" id="navLogin"><a class="nav-link" href="./pages/auth.html">Iniciar Sesión</a></li>
+                    <li class="nav-item d-none" id="navLogout"><a class="nav-link" href="#" onclick="cerrarSesion()">Cerrar Sesión</a></li>
                 </ul>
             </div>
         </div>
@@ -89,8 +33,7 @@
 
     <header class="hero-section text-center">
         <div class="container">
-            <h1 class="display-5 fw-bold">Departamento de Oncología</h1>
-            <p class="lead">Hospital Centro de Salud "Zenón J. Santillán" - Tucumán</p>
+            <h1 class="display-5 fw-bold">Solicitud de Turnos</h1>
         </div>
     </header>
 
@@ -98,146 +41,115 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 
-                <div id="alertaExito" class="alert alert-success d-none alert-dismissible fade show" role="alert">
-                    <strong>¡Turno confirmado!</strong> Los datos han sido guardados exitosamente.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div id="mensajeLogin" class="alert alert-warning text-center d-none">
+                    <h4>Debe iniciar sesión</h4>
+                    <p>Para solicitar un turno, por favor inicie sesión o regístrese.</p>
+                    <a href="./pages/auth.html" class="btn btn-primary">Ir a Iniciar Sesión</a>
                 </div>
 
-                <div class="form-container">
-                    <h3 class="mb-4 text-center border-bottom pb-2">Solicitud de Turno</h3>
-                    
+                <div class="form-container" id="contenedorFormulario" style="display: none;">
                     <form id="formularioTurno">
-                        
                         <div class="mb-3">
-                            <label for="turnoSeleccionado" class="form-label fw-bold">Turnos Disponibles (Oncología)</label>
-                            <select class="form-select" id="turnoSeleccionado" required>
-                                <option value="" selected disabled>Cargando turnos disponibles...</option>
-                            </select>
-                            <div class="form-text">Seleccione el horario de atención con el profesional.</div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="nombre" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre" required>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="apellido" class="form-label">Apellido</label>
-                                <input type="text" class="form-control" id="apellido" placeholder="Ingrese su apellido" required>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="dni" class="form-label">DNI</label>
-                                <input type="number" class="form-control" id="dni" placeholder="Sin puntos ni espacios" required>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="sexo" class="form-label">Sexo</label>
-                                <select class="form-select" id="sexo" required>
-                                    <option value="" selected disabled>Seleccione...</option>
-                                    <option value="Femenino">Femenino</option>
-                                    <option value="Masculino">Masculino</option>
-                                    <option value="Otro">Otro</option>
-                                </select>
+                            <label class="form-label fw-bold">Modalidad de Atención</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check"><input class="form-check-input" type="radio" name="modalidad" id="modPresencial" value="Presencial" checked><label class="form-check-label" for="modPresencial">🏢 Presencial</label></div>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="modalidad" id="modTelemedicina" value="Telemedicina"><label class="form-check-label" for="modTelemedicina">💻 Telemedicina</label></div>
                             </div>
                         </div>
 
                         <div class="mb-4">
-                            <label for="diagnostico" class="form-label text-muted">Diagnóstico (Uso exclusivo del profesional)</label>
-                            <textarea class="form-control" id="diagnostico" rows="2" placeholder="Este campo será completado por el médico tratante..." disabled></textarea>
+                            <label class="form-label fw-bold">Turnos Disponibles</label>
+                            <select class="form-select" id="turnoSeleccionado" required></select>
                         </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-custom btn-lg">Confirmar Turno</button>
+                        <div class="row">
+                            <div class="col-md-6 mb-3"><label class="form-label">Nombre y Apellido</label><input type="text" class="form-control" id="nombreCompleto" readonly></div>
+                            <div class="col-md-6 mb-3"><label class="form-label">DNI</label><input type="text" class="form-control" id="dni" readonly></div>
                         </div>
+
+                        <button type="submit" class="btn btn-primary w-100 btn-lg mt-2">Confirmar Turno</button>
                     </form>
                 </div>
             </div>
         </div>
     </main>
 
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="emailToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="emailToastBody">
+                    </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
+        const sesion = JSON.parse(localStorage.getItem('sesion_actual'));
+        
         document.addEventListener('DOMContentLoaded', () => {
-            
-            // 1. Simulación de Base de Datos (Turnos disponibles)
-            // A futuro, esto puede conectarse mediante fetch() a una API en tu backend (ej. C# ASP.NET Core)
-            const turnosMockDB = [
-                { id: 1, fecha: "10/06/2026", hora: "08:30", profesional: "Dr. Roberto García" },
-                { id: 2, fecha: "10/06/2026", hora: "09:15", profesional: "Dra. María Elena Walsh" },
-                { id: 3, fecha: "12/06/2026", hora: "10:00", profesional: "Dr. Roberto García" },
-                { id: 4, fecha: "15/06/2026", hora: "11:30", profesional: "Dra. Ana Silva" }
-            ];
-
-            const selectTurnos = document.getElementById('turnoSeleccionado');
-            const formulario = document.getElementById('formularioTurno');
-            const alertaExito = document.getElementById('alertaExito');
-
-            // 2. Cargar turnos en el `<select>`
-            const cargarTurnos = () => {
-                selectTurnos.innerHTML = '<option value="" selected disabled>Seleccione un turno...</option>';
+            if (sesion) {
+                document.getElementById('navLogin').classList.add('d-none');
+                document.getElementById('navLogout').classList.remove('d-none');
                 
-                turnosMockDB.forEach(turno => {
-                    const option = document.createElement('option');
-                    option.value = `${turno.fecha} - ${turno.hora} (${turno.profesional})`;
-                    option.textContent = `${turno.fecha} | ${turno.hora} - ${turno.profesional}`;
-                    selectTurnos.appendChild(option);
-                });
-            };
-
-            // Ejecutar carga inicial
-            cargarTurnos();
-
-            // 3. Manejar el evento de envío del formulario
-            formulario.addEventListener('submit', (e) => {
-                e.preventDefault(); // Prevenir recarga de la página
-
-                // Capturar la fecha actual de registro
-                const fechaActual = new Date().toLocaleString('es-AR');
-
-                // Crear el objeto del paciente
-                const nuevoTurno = {
-                    idTurno: Date.now().toString(), // ID único basado en el timestamp
-                    turnoReservado: selectTurnos.value,
-                    nombre: document.getElementById('nombre').value.trim(),
-                    apellido: document.getElementById('apellido').value.trim(),
-                    dni: document.getElementById('dni').value.trim(),
-                    sexo: document.getElementById('sexo').value,
-                    fechaRegistro: fechaActual,
-                    diagnostico: "" // Campo vacío intencionalmente para el médico
-                };
-
-                // 4. Guardar en LocalStorage
-                guardarEnLocalStorage(nuevoTurno);
-
-                // Mostrar alerta visual y resetear formulario
-                alertaExito.classList.remove('d-none');
-                formulario.reset();
-                
-                // Ocultar la alerta después de 4 segundos
-                setTimeout(() => {
-                    alertaExito.classList.add('d-none');
-                }, 4000);
-                
-                console.log("Turno guardado:", nuevoTurno);
-            });
-
-            // Función auxiliar para administrar el LocalStorage
-            function guardarEnLocalStorage(nuevoTurno) {
-                // Obtener turnos previos o iniciar array vacío
-                let turnosGuardados = JSON.parse(localStorage.getItem('turnos_oncologia_hcs')) || [];
-                
-                // Agregar el nuevo turno
-                turnosGuardados.push(nuevoTurno);
-                
-                // Guardar nuevamente el string JSON
-                localStorage.setItem('turnos_oncologia_hcs', JSON.stringify(turnosGuardados));
+                if (sesion.rol === 'paciente') {
+                    document.getElementById('navMisTurnos').classList.remove('d-none');
+                    document.getElementById('contenedorFormulario').style.display = 'block';
+                    document.getElementById('nombreCompleto').value = `${sesion.nombre} ${sesion.apellido}`;
+                    document.getElementById('dni').value = sesion.dni;
+                    cargarTurnosDisponibles();
+                } else {
+                    window.location.href = './pages/panel.html';
+                }
+            } else {
+                document.getElementById('mensajeLogin').classList.remove('d-none');
             }
         });
+
+        function cargarTurnosDisponibles() {
+            const turnosDisponibles = JSON.parse(localStorage.getItem('turnos_disponibles_hcs')) || [];
+            const select = document.getElementById('turnoSeleccionado');
+            select.innerHTML = '<option value="" selected disabled>Seleccione un turno...</option>';
+            
+            if (turnosDisponibles.length === 0) {
+                select.innerHTML = '<option value="" disabled>No hay turnos disponibles.</option>';
+                return;
+            }
+
+            turnosDisponibles.forEach(turno => {
+                select.innerHTML += `<option value="${turno.id}">${turno.fecha} | ${turno.hora} - Dr/a. ${turno.doctorNombre} (${turno.especialidad})</option>`;
+            });
+        }
+
+        document.getElementById('formularioTurno').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const idTurno = document.getElementById('turnoSeleccionado').value;
+            const modalidad = document.querySelector('input[name="modalidad"]:checked').value;
+            let turnos = JSON.parse(localStorage.getItem('turnos_disponibles_hcs')) || [];
+            
+            const indice = turnos.findIndex(t => t.id === idTurno);
+            const turnoReservado = turnos.splice(indice, 1)[0];
+            turnoReservado.modalidad = modalidad;
+            turnoReservado.estado = 'Activo'; // Estado para seguimiento
+
+            // Guardar en paciente
+            let usuarios = JSON.parse(localStorage.getItem('usuarios_hcs'));
+            let pIndex = usuarios.findIndex(u => u.dni === sesion.dni);
+            usuarios[pIndex].turnos.push(turnoReservado);
+            localStorage.setItem('usuarios_hcs', JSON.stringify(usuarios));
+            localStorage.setItem('turnos_disponibles_hcs', JSON.stringify(turnos));
+
+            // Simulación de envío de correo mediante Toast
+            const emailHtml = `📧 <strong>Enviando confirmación...</strong><br>Se notificó a <u>${sesion.email || 'tu correo'}</u>. Tienes un turno ${modalidad} el ${turnoReservado.fecha} a las ${turnoReservado.hora}.`;
+            document.getElementById('emailToastBody').innerHTML = emailHtml;
+            new bootstrap.Toast(document.getElementById('emailToast')).show();
+
+            cargarTurnosDisponibles();
+            document.getElementById('formularioTurno').reset();
+        });
+
+        function cerrarSesion() { localStorage.removeItem('sesion_actual'); window.location.reload(); }
     </script>
 </body>
 </html>

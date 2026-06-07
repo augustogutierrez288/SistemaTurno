@@ -4,62 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso - Hospital Centro de Salud</title>
-    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
     <style>
-        :root {
-            --primary-color: #0056b3;
-            --background-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        }
-        
-        body {
-            background: var(--background-gradient);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .auth-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border: none;
-            overflow: hidden;
-        }
-
-        .nav-tabs .nav-link {
-            color: #6c757d;
-            font-weight: 500;
-            border: none;
-            border-bottom: 3px solid transparent;
-        }
-
-        .nav-tabs .nav-link.active {
-            color: var(--primary-color) !important;
-            border: none;
-            border-bottom: 3px solid var(--primary-color);
-            font-weight: bold;
-        }
-
-        .btn-custom {
-            background-color: var(--primary-color);
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .btn-custom:hover {
-            background-color: #004494;
-            color: white;
-        }
-        
-        .brand-header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1.5rem;
-            text-align: center;
-        }
+        :root { --primary-color: #0056b3; }
+        body { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); min-height: 100vh; display: flex; align-items: center; font-family: 'Segoe UI', sans-serif; }
+        .auth-card { background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: none; overflow: hidden; }
+        .nav-tabs .nav-link { color: #6c757d; font-weight: 500; border: none; }
+        .nav-tabs .nav-link.active { color: var(--primary-color) !important; border-bottom: 3px solid var(--primary-color); font-weight: bold; }
+        .btn-custom { background-color: var(--primary-color); color: white; }
+        .brand-header { background-color: var(--primary-color); color: white; padding: 1.5rem; text-align: center; }
     </style>
 </head>
 <body>
@@ -67,170 +20,114 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-5">
-                
                 <div id="alertContenedor" class="alert d-none alert-dismissible fade show" role="alert">
                     <span id="alertMensaje"></span>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 <div class="card auth-card">
                     <div class="brand-header">
-                        <h4 class="margin-0 fw-bold">🏥 Hospital Centro de Salud</h4>
-                        <small>Portal de Oncología - San Miguel de Tucumán</small>
+                        <h4 class="margin-0 fw-bold">🏥 HCS Tucumán</h4>
+                        <small>Portal Integral de Salud</small>
                     </div>
                     
                     <div class="card-body p-4">
-                        <ul class="nav nav-tabs nav-fill mb-4" id="authTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#loginContainer" type="button" role="tab">Ingresar</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#registerContainer" type="button" role="tab">Registrarse</button>
-                            </li>
+                        <ul class="nav nav-tabs nav-fill mb-4" role="tablist">
+                            <li class="nav-item"><button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#loginContainer" type="button">Ingresar</button></li>
+                            <li class="nav-item"><button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#registerContainer" type="button">Registro Pacientes</button></li>
                         </ul>
 
-                        <div class="tab-content" id="authTabsContent">
-                            
-                            <div class="tab-pane fade show active" id="loginContainer" role="tabpanel">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="loginContainer">
                                 <form id="formLogin">
-                                    <div class="mb-3">
-                                        <label for="loginDni" class="form-label">Número de DNI</label>
-                                        <input type="number" class="form-control" id="loginDni" placeholder="Sin puntos ni espacios" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="loginPassword" class="form-label">Contraseña</label>
-                                        <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required>
-                                    </div>
-                                    <div class="form-text mb-3 text-muted text-center">
-                                        💡 Probar médico -> DNI: <b>0000</b> | Clave: <b>doctor</b>
-                                    </div>
-                                    <div class="d-grid mt-4">
-                                        <button type="submit" class="btn btn-custom btn-lg">Iniciar Sesión</button>
-                                    </div>
+                                    <div class="mb-3"><label class="form-label">Número de DNI</label><input type="text" class="form-control" id="loginDni" required></div>
+                                    <div class="mb-3"><label class="form-label">Contraseña</label><input type="password" class="form-control" id="loginPassword" required></div>
+                                    <button type="submit" class="btn btn-custom w-100 btn-lg mt-3">Iniciar Sesión</button>
                                 </form>
                             </div>
 
-                            <div class="tab-pane fade" id="registerContainer" role="tabpanel">
+                            <div class="tab-pane fade" id="registerContainer">
                                 <form id="formRegistro">
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="regNombre" class="form-label">Nombre</label>
-                                            <input type="text" class="form-control" id="regNombre" required>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="regApellido" class="form-label">Apellido</label>
-                                            <input type="text" class="form-control" id="regApellido" required>
-                                        </div>
+                                        <div class="col-6 mb-3"><label class="form-label">Nombre</label><input type="text" class="form-control" id="regNombre" required></div>
+                                        <div class="col-6 mb-3"><label class="form-label">Apellido</label><input type="text" class="form-control" id="regApellido" required></div>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="regDni" class="form-label">DNI</label>
-                                        <input type="number" class="form-control" id="regDni" placeholder="Número de documento único" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="regPassword" class="form-label">Crea una Contraseña</label>
-                                        <input type="password" class="form-control" id="regPassword" placeholder="Mínimo 4 caracteres" minlength="4" required>
-                                    </div>
-                                    <div class="d-grid mt-4">
-                                        <button type="submit" class="btn btn-custom btn-lg">Crear Cuenta</button>
-                                    </div>
+                                    <div class="mb-3"><label class="form-label">DNI</label><input type="number" class="form-control" id="regDni" required></div>
+                                    <div class="mb-3"><label class="form-label">Correo Electrónico</label><input type="email" class="form-control" id="regEmail" placeholder="Ej: paciente@mail.com" required></div>
+                                    <div class="mb-3"><label class="form-label">Contraseña</label><input type="password" class="form-control" id="regPassword" required></div>
+                                    <button type="submit" class="btn btn-custom w-100 btn-lg mt-3">Crear Cuenta</button>
                                 </form>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const formLogin = document.getElementById('formLogin');
-            const formRegistro = document.getElementById('formRegistro');
-            const alertContenedor = document.getElementById('alertContenedor');
-            const alertMensaje = document.getElementById('alertMensaje');
+            let doctores = JSON.parse(localStorage.getItem('doctores_hcs'));
+            if (!doctores) {
+                doctores = [{ dni: 'admin', nombre: 'Súper', apellido: 'Admin', email: 'admin@hcs.com', password: 'admin', rol: 'admin', especialidad: 'Sistemas' }];
+                localStorage.setItem('doctores_hcs', JSON.stringify(doctores));
+            }
 
-            // Función para mostrar alertas integradas
-            const mostrarAlerta = (mensaje, tipo = 'danger') => {
-                alertContenedor.className = `alert alert-${tipo} alert-dismissible fade show`;
-                alertMensaje.textContent = mensaje;
-                alertContenedor.classList.remove('d-none');
+            const alertCont = document.getElementById('alertContenedor');
+            const alertMsj = document.getElementById('alertMensaje');
+
+            const mostrarAlerta = (msj, tipo = 'danger') => {
+                alertCont.className = `alert alert-${tipo} mb-3`;
+                alertMsj.textContent = msj;
+                alertCont.classList.remove('d-none');
             };
 
-            // LÓGICA DE REGISTRO
-            formRegistro.addEventListener('submit', (e) => {
+            document.getElementById('formLogin').addEventListener('submit', (e) => {
                 e.preventDefault();
-                
-                const dni = document.getElementById('regDni').value.trim();
-                const nombre = document.getElementById('regNombre').value.trim();
-                const apellido = document.getElementById('regApellido').value.trim();
-                const password = document.getElementById('regPassword').value;
+                const dni = document.getElementById('loginDni').value.trim();
+                const pass = document.getElementById('loginPassword').value;
 
-                // Traer usuarios existentes de LocalStorage
-                let usuarios = JSON.parse(localStorage.getItem('usuarios_hcs')) || [];
+                const pacientes = JSON.parse(localStorage.getItem('usuarios_hcs')) || [];
+                const medicosAdmin = JSON.parse(localStorage.getItem('doctores_hcs')) || [];
 
-                // Validar si el DNI ya existe
-                const existeUsuario = usuarios.find(u => u.dni === dni);
-                if (existeUsuario || dni === "0000") {
-                    mostrarAlerta('El DNI ingresado ya se encuentra registrado.');
+                const usuarioStaff = medicosAdmin.find(u => u.dni === dni && u.password === pass);
+                if (usuarioStaff) {
+                    localStorage.setItem('sesion_actual', JSON.stringify(usuarioStaff));
+                    window.location.href = '/pages/panel.html';
                     return;
                 }
 
-                // Crear estructura solicitada con arrays vacíos
-                const nuevoUsuario = {
-                    nombre,
-                    apellido,
-                    dni,
-                    password,
-                    diagnosticos: [], // Reservado para el Médico
-                    turnos: []       // Almacenará el historial de turnos solicitados
-                };
-
-                usuarios.push(nuevoUsuario);
-                localStorage.setItem('usuarios_hcs', JSON.stringify(usuarios));
-
-                mostrarAlerta('¡Usuario registrado con éxito! Ya puedes iniciar sesión.', 'success');
-                formRegistro.reset();
-                
-                // Forzar cambio visual a la pestaña de login
-                const loginTabTrigger = new bootstrap.Tab(document.getElementById('login-tab'));
-                loginTabTrigger.show();
+                const usuarioPaciente = pacientes.find(u => u.dni === dni && u.password === pass);
+                if (usuarioPaciente) {
+                    usuarioPaciente.rol = 'paciente';
+                    localStorage.setItem('sesion_actual', JSON.stringify(usuarioPaciente));
+                    window.location.href = '../index.html';
+                    return;
+                }
+                mostrarAlerta('DNI o contraseña incorrectos.');
             });
 
-            // LÓGICA DE LOGIN
-            formLogin.addEventListener('submit', (e) => {
+            document.getElementById('formRegistro').addEventListener('submit', (e) => {
                 e.preventDefault();
+                const dni = document.getElementById('regDni').value.trim();
+                let usuarios = JSON.parse(localStorage.getItem('usuarios_hcs')) || [];
 
-                const dni = document.getElementById('loginDni').value.trim();
-                const password = document.getElementById('loginPassword').value;
-
-                // ACCESO ESPECIAL: Médico / Doctor
-                if (dni === "0000" && password === "doctor") {
-                    mostrarAlerta('Accediendo al Panel Médico...', 'info');
-                    setTimeout(() => {
-                        window.location.href = 'panel.html';
-                    }, 1000);
-                    return;
+                if (usuarios.find(u => u.dni === dni) || doctores.find(u => u.dni === dni)) {
+                    return mostrarAlerta('El DNI ya está registrado.');
                 }
 
-                // ACCESO PACIENTES: Buscar en LocalStorage
-                const usuarios = JSON.parse(localStorage.getItem('usuarios_hcs')) || [];
-                const usuarioValido = usuarios.find(u => u.dni === dni && u.password === password);
+                usuarios.push({
+                    nombre: document.getElementById('regNombre').value.trim(),
+                    apellido: document.getElementById('regApellido').value.trim(),
+                    dni: dni,
+                    email: document.getElementById('regEmail').value.trim(),
+                    password: document.getElementById('regPassword').value,
+                    diagnosticos: [], turnos: [], rol: 'paciente'
+                });
 
-                if (usuarioValido) {
-                    // Guardamos la sesión activa del paciente actual
-                    localStorage.setItem('sesion_paciente', JSON.stringify(usuarioValido));
-                    mostrarAlerta(`Bienvenido/a ${usuarioValido.nombre}`, 'success');
-                    
-                    setTimeout(() => {
-                        window.location.href = 'index.html'; // Redirige a la pantalla de turnos principal
-                    }, 1000);
-                } else {
-                    mostrarAlerta('DNI o contraseña incorrectos. Por favor revise sus datos.');
-                }
+                localStorage.setItem('usuarios_hcs', JSON.stringify(usuarios));
+                mostrarAlerta('¡Cuenta creada! Ya puede iniciar sesión.', 'success');
+                document.getElementById('formRegistro').reset();
             });
         });
     </script>
