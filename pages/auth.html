@@ -3,16 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso - Hospital Centro de Salud</title>
+    <title>Acceso - HCS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { --primary-color: #0056b3; }
-        body { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); min-height: 100vh; display: flex; align-items: center; font-family: 'Segoe UI', sans-serif; }
-        .auth-card { background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: none; overflow: hidden; }
-        .nav-tabs .nav-link { color: #6c757d; font-weight: 500; border: none; }
+        :root { 
+            --primary-color: #4a90e2; 
+            --bg-color: #f4f7f6;
+            --text-color: #2c3e50;
+        }
+        body { 
+            background: var(--bg-color); 
+            min-height: 100vh; display: flex; align-items: center; 
+            font-family: 'Segoe UI', system-ui, sans-serif; color: var(--text-color);
+        }
+        .auth-card { 
+            background: white; border-radius: 16px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: none; overflow: hidden; 
+        }
+        .nav-tabs .nav-link { color: #8395a7; font-weight: 500; border: none; }
         .nav-tabs .nav-link.active { color: var(--primary-color) !important; border-bottom: 3px solid var(--primary-color); font-weight: bold; }
-        .btn-custom { background-color: var(--primary-color); color: white; }
-        .brand-header { background-color: var(--primary-color); color: white; padding: 1.5rem; text-align: center; }
+        .btn-primary { background-color: var(--primary-color); border: none; }
+        .form-control { border-radius: 8px; border: 1px solid #dce4ec; }
+        .form-control:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.15); }
+        .brand-header { background-color: var(--primary-color); color: white; padding: 2rem; text-align: center; }
     </style>
 </head>
 <body>
@@ -20,14 +33,14 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-5">
-                <div id="alertContenedor" class="alert d-none alert-dismissible fade show" role="alert">
+                <div id="alertContenedor" class="alert d-none alert-dismissible fade show border-0 shadow-sm" role="alert">
                     <span id="alertMensaje"></span>
                 </div>
 
                 <div class="card auth-card">
                     <div class="brand-header">
-                        <h4 class="margin-0 fw-bold">🏥 HCS Tucumán</h4>
-                        <small>Portal Integral de Salud</small>
+                        <h3 class="margin-0 fw-bold">🏥 HCS Tucumán</h3>
+                        <small class="opacity-75">Portal Integral de Salud</small>
                     </div>
                     
                     <div class="card-body p-4">
@@ -37,24 +50,27 @@
                         </ul>
 
                         <div class="tab-content">
+                            <!-- LOGIN -->
                             <div class="tab-pane fade show active" id="loginContainer">
                                 <form id="formLogin">
-                                    <div class="mb-3"><label class="form-label">Número de DNI</label><input type="text" class="form-control" id="loginDni" required></div>
-                                    <div class="mb-3"><label class="form-label">Contraseña</label><input type="password" class="form-control" id="loginPassword" required></div>
-                                    <button type="submit" class="btn btn-custom w-100 btn-lg mt-3">Iniciar Sesión</button>
+                                    <div class="mb-3"><label class="form-label small fw-bold text-secondary">Número de DNI</label><input type="text" class="form-control bg-light" id="loginDni" required></div>
+                                    <div class="mb-4"><label class="form-label small fw-bold text-secondary">Contraseña</label><input type="password" class="form-control bg-light" id="loginPassword" required></div>
+                                    <button type="submit" class="btn btn-primary w-100 btn-lg">Iniciar Sesión</button>
+                                    <div class="text-center mt-3"><a href="../index.html" class="text-decoration-none small text-muted">← Volver al Inicio</a></div>
                                 </form>
                             </div>
 
+                            <!-- REGISTRO -->
                             <div class="tab-pane fade" id="registerContainer">
                                 <form id="formRegistro">
                                     <div class="row">
-                                        <div class="col-6 mb-3"><label class="form-label">Nombre</label><input type="text" class="form-control" id="regNombre" required></div>
-                                        <div class="col-6 mb-3"><label class="form-label">Apellido</label><input type="text" class="form-control" id="regApellido" required></div>
+                                        <div class="col-6 mb-3"><label class="form-label small fw-bold text-secondary">Nombre</label><input type="text" class="form-control" id="regNombre" required></div>
+                                        <div class="col-6 mb-3"><label class="form-label small fw-bold text-secondary">Apellido</label><input type="text" class="form-control" id="regApellido" required></div>
                                     </div>
-                                    <div class="mb-3"><label class="form-label">DNI</label><input type="number" class="form-control" id="regDni" required></div>
-                                    <div class="mb-3"><label class="form-label">Correo Electrónico</label><input type="email" class="form-control" id="regEmail" placeholder="Ej: paciente@mail.com" required></div>
-                                    <div class="mb-3"><label class="form-label">Contraseña</label><input type="password" class="form-control" id="regPassword" required></div>
-                                    <button type="submit" class="btn btn-custom w-100 btn-lg mt-3">Crear Cuenta</button>
+                                    <div class="mb-3"><label class="form-label small fw-bold text-secondary">DNI</label><input type="number" class="form-control" id="regDni" required></div>
+                                    <div class="mb-3"><label class="form-label small fw-bold text-secondary">Correo Electrónico</label><input type="email" class="form-control" id="regEmail" placeholder="ejemplo@correo.com" required></div>
+                                    <div class="mb-4"><label class="form-label small fw-bold text-secondary">Contraseña</label><input type="password" class="form-control" id="regPassword" required></div>
+                                    <button type="submit" class="btn btn-primary w-100 btn-lg">Crear Cuenta</button>
                                 </form>
                             </div>
                         </div>
@@ -77,7 +93,7 @@
             const alertMsj = document.getElementById('alertMensaje');
 
             const mostrarAlerta = (msj, tipo = 'danger') => {
-                alertCont.className = `alert alert-${tipo} mb-3`;
+                alertCont.className = `alert alert-${tipo} mb-3 border-0`;
                 alertMsj.textContent = msj;
                 alertCont.classList.remove('d-none');
             };
@@ -93,7 +109,7 @@
                 const usuarioStaff = medicosAdmin.find(u => u.dni === dni && u.password === pass);
                 if (usuarioStaff) {
                     localStorage.setItem('sesion_actual', JSON.stringify(usuarioStaff));
-                    window.location.href = '/pages/panel.html';
+                    window.location.href = 'panel.html'; // panel.html está en la misma carpeta (pages)
                     return;
                 }
 
@@ -101,7 +117,7 @@
                 if (usuarioPaciente) {
                     usuarioPaciente.rol = 'paciente';
                     localStorage.setItem('sesion_actual', JSON.stringify(usuarioPaciente));
-                    window.location.href = '../index.html';
+                    window.location.href = '../index.html'; // Redirección hacia la raíz
                     return;
                 }
                 mostrarAlerta('DNI o contraseña incorrectos.');
@@ -113,7 +129,7 @@
                 let usuarios = JSON.parse(localStorage.getItem('usuarios_hcs')) || [];
 
                 if (usuarios.find(u => u.dni === dni) || doctores.find(u => u.dni === dni)) {
-                    return mostrarAlerta('El DNI ya está registrado.');
+                    return mostrarAlerta('El DNI ya está registrado.', 'warning');
                 }
 
                 usuarios.push({

@@ -6,10 +6,17 @@
     <title>Panel Gestión - HCS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { --sidebar-bg: #212529; }
-        body { background-color: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
+        :root { 
+            --sidebar-bg: #2c3e50; 
+            --bg-color: #f4f7f6;
+            --primary-color: #4a90e2;
+        }
+        body { background-color: var(--bg-color); font-family: 'Segoe UI', system-ui, sans-serif; color: #2c3e50; }
         .navbar-doctor { background-color: var(--sidebar-bg); }
-        .card-custom { border-radius: 12px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.04); background: white; margin-bottom: 1.5rem; }
+        .card-custom { border-radius: 16px; border: 1px solid #eef2f5; box-shadow: 0 4px 15px rgba(0,0,0,0.03); background: white; margin-bottom: 1.5rem; }
+        .btn-primary { background-color: var(--primary-color); border: none; }
+        .form-control, .form-select { border-radius: 8px; border: 1px solid #dce4ec; }
+        .form-control:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.15); }
     </style>
 </head>
 <body>
@@ -18,60 +25,61 @@
         <div class="container">
             <a class="navbar-brand fw-bold" id="panelTitle" href="#">👨‍⚕️ Panel de Control</a>
             <div class="d-flex align-items-center">
-                <span class="navbar-text text-white me-3" id="userNameDisplay"></span>
-                <button class="btn btn-outline-light btn-sm" onclick="cerrarSesion()">Cerrar Sesión</button>
+                <span class="navbar-text text-white me-3 opacity-75" id="userNameDisplay"></span>
+                <button class="btn btn-light btn-sm fw-bold" onclick="cerrarSesion()">Cerrar Sesión</button>
             </div>
         </div>
     </nav>
 
     <main class="container my-5">
+        <!-- VISTA ADMIN -->
         <div id="vistaAdmin" class="d-none">
-            <h2 class="fw-bold mb-4">Administración: Gestión de Doctores</h2>
+            <h3 class="fw-bold mb-4 text-secondary">Gestión de Staff Médico</h3>
             <div class="row">
                 <div class="col-md-5">
                     <div class="card-custom p-4">
-                        <h5>Crear Nuevo Doctor</h5>
+                        <h5 class="mb-3 text-primary">Añadir Profesional</h5>
                         <form id="formCrearDoctor">
                             <div class="mb-2"><input type="text" id="docNombre" class="form-control" placeholder="Nombre completo" required></div>
                             <div class="mb-2"><input type="email" id="docEmail" class="form-control" placeholder="Correo electrónico" required></div>
                             <div class="mb-2"><input type="number" id="docDni" class="form-control" placeholder="DNI" required></div>
                             <div class="mb-2"><input type="text" id="docEspecialidad" class="form-control" placeholder="Especialidad (Ej: Oncología)" required></div>
                             <div class="mb-3"><input type="password" id="docPassword" class="form-control" placeholder="Contraseña" required></div>
-                            <button type="submit" class="btn btn-primary w-100">Registrar Doctor</button>
+                            <button type="submit" class="btn btn-primary w-100 fw-bold">Registrar Médico</button>
                         </form>
                     </div>
                 </div>
                 <div class="col-md-7">
                     <div class="card-custom p-4">
-                        <h5>Doctores Activos</h5>
+                        <h5 class="mb-3 text-primary">Doctores Activos</h5>
                         <ul class="list-group mt-3" id="listaDoctores"></ul>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- VISTA DOCTOR -->
         <div id="vistaDoctor" class="d-none">
-            <h2 class="fw-bold mb-4">Mi Consultorio</h2>
+            <h3 class="fw-bold mb-4 text-secondary">Mi Consultorio Digital</h3>
             <div class="row">
                 <div class="col-md-4">
-                    <div class="card-custom p-4 mb-4">
-                        <h5 class="border-bottom pb-2">Crear Turno Disponible</h5>
-                        <form id="formCrearTurno">
-                            <div class="mb-2"><label>Fecha</label><input type="date" id="turnoFecha" class="form-control" required></div>
-                            <div class="mb-3"><label>Hora</label><input type="time" id="turnoHora" class="form-control" required></div>
-                            <button type="submit" class="btn btn-success w-100">Agregar a mi Agenda</button>
+                    <div class="card-custom p-4 mb-4 bg-white">
+                        <h5 class="border-bottom pb-2 text-primary">Abrir Nuevo Horario</h5>
+                        <form id="formCrearTurno" class="mt-3">
+                            <div class="mb-2"><label class="small text-muted fw-bold">Fecha</label><input type="date" id="turnoFecha" class="form-control" required></div>
+                            <div class="mb-3"><label class="small text-muted fw-bold">Hora</label><input type="time" id="turnoHora" class="form-control" required></div>
+                            <button type="submit" class="btn btn-success w-100 fw-bold">Guardar en Agenda</button>
                         </form>
                     </div>
-                    
                     <div class="card-custom p-4">
-                        <h5 class="border-bottom pb-2">Mi Agenda Libre</h5>
-                        <ul class="list-group list-group-flush small" id="listaMisTurnos"></ul>
+                        <h5 class="border-bottom pb-2 text-primary">Mi Agenda Libre</h5>
+                        <ul class="list-group list-group-flush small mt-2" id="listaMisTurnos"></ul>
                     </div>
                 </div>
 
                 <div class="col-md-8">
                     <div class="card-custom p-4">
-                        <h5 class="border-bottom pb-2">Gestión de Citas y Pacientes</h5>
+                        <h5 class="border-bottom pb-2 text-primary">Citas Solicitadas por Pacientes</h5>
                         <div id="contenedorPacientes" class="mt-3"></div>
                     </div>
                 </div>
@@ -84,7 +92,7 @@
         const sesion = JSON.parse(localStorage.getItem('sesion_actual'));
         
         document.addEventListener('DOMContentLoaded', () => {
-            if (!sesion || sesion.rol === 'paciente') { window.location.href = 'index.html'; return; }
+            if (!sesion || sesion.rol === 'paciente') { window.location.href = '../index.html'; return; }
             document.getElementById('userNameDisplay').textContent = `Hola, ${sesion.nombre}`;
 
             if (sesion.rol === 'admin') {
@@ -98,12 +106,9 @@
                     if(doctores.find(d => d.dni === dni)) return alert('Doctor ya existe');
 
                     doctores.push({
-                        nombre: document.getElementById('docNombre').value,
-                        email: document.getElementById('docEmail').value,
-                        dni: dni,
-                        especialidad: document.getElementById('docEspecialidad').value,
-                        password: document.getElementById('docPassword').value,
-                        rol: 'doctor'
+                        nombre: document.getElementById('docNombre').value, email: document.getElementById('docEmail').value,
+                        dni: dni, especialidad: document.getElementById('docEspecialidad').value,
+                        password: document.getElementById('docPassword').value, rol: 'doctor'
                     });
                     localStorage.setItem('doctores_hcs', JSON.stringify(doctores));
                     document.getElementById('formCrearDoctor').reset();
@@ -137,7 +142,7 @@
             const lista = document.getElementById('listaDoctores');
             lista.innerHTML = '';
             doctores.forEach(doc => {
-                if(doc.rol !== 'admin') lista.innerHTML += `<li class="list-group-item"><strong>Dr/a. ${doc.nombre}</strong> - ${doc.especialidad}</li>`;
+                if(doc.rol !== 'admin') lista.innerHTML += `<li class="list-group-item bg-light border-0 mb-2 rounded"><strong>Dr/a. ${doc.nombre}</strong> - ${doc.especialidad}</li>`;
             });
         }
 
@@ -145,8 +150,8 @@
             const turnos = JSON.parse(localStorage.getItem('turnos_disponibles_hcs')) || [];
             const misTurnos = turnos.filter(t => t.doctorDni === sesion.dni);
             const lista = document.getElementById('listaMisTurnos');
-            lista.innerHTML = misTurnos.length === 0 ? '<li class="list-group-item text-muted">Agenda vacía</li>' : '';
-            misTurnos.forEach(t => lista.innerHTML += `<li class="list-group-item border-start border-4 border-success">🗓️ ${t.fecha} a las ⏰ ${t.hora}</li>`);
+            lista.innerHTML = misTurnos.length === 0 ? '<li class="list-group-item border-0 text-muted bg-light rounded text-center py-3">Agenda vacía</li>' : '';
+            misTurnos.forEach(t => lista.innerHTML += `<li class="list-group-item border-start border-4 border-success mb-2 rounded bg-light">🗓️ ${t.fecha} a las ⏰ ${t.hora}hs</li>`);
         }
 
         function renderizarMisPacientes() {
@@ -155,38 +160,36 @@
             contenedor.innerHTML = '';
 
             const misPacientes = usuarios.filter(u => u.turnos && u.turnos.some(t => t.doctorDni === sesion.dni));
-            if (misPacientes.length === 0) { contenedor.innerHTML = '<p class="text-muted">Aún no tienes turnos reservados.</p>'; return; }
+            if (misPacientes.length === 0) { contenedor.innerHTML = '<div class="alert alert-light border shadow-sm">Aún no tienes turnos reservados por pacientes.</div>'; return; }
 
             misPacientes.forEach((paciente) => {
                 const turnosConmigo = paciente.turnos.filter(t => t.doctorDni === sesion.dni);
                 
                 let turnosList = turnosConmigo.map(t => {
-                    if (t.estado === 'Cancelado') return `<li class="list-group-item text-danger text-decoration-line-through">Cancelado: ${t.fecha} - ${t.hora}</li>`;
+                    if (t.estado === 'Cancelado') return `<li class="list-group-item text-danger border-0 bg-light rounded mb-2" style="opacity:0.7"><s>Cancelado: ${t.fecha} - ${t.hora}hs</s></li>`;
 
                     let controlesAdicionales = '';
                     if (t.modalidad === 'Telemedicina') {
                         controlesAdicionales = t.meetLink 
-                            ? `<p class="text-success small mb-1">Enlace Meet Enviado: <a href="${t.meetLink}" target="_blank">Ver</a></p>` 
-                            : `<div class="input-group input-group-sm mt-2 mb-2"><input type="url" id="meet-${paciente.dni}-${t.id}" class="form-control" placeholder="Pegar URL de Google Meet"><button class="btn btn-outline-primary" onclick="guardarMeet('${paciente.dni}', '${t.id}')">Adjuntar Meet</button></div>`;
+                            ? `<p class="text-success small mb-0 mt-2 px-2 py-1 bg-white rounded border">✓ Enlace Enviado: <a href="${t.meetLink}" target="_blank">Ver Enlace</a></p>` 
+                            : `<div class="input-group input-group-sm mt-2"><input type="url" id="meet-${paciente.dni}-${t.id}" class="form-control" placeholder="Pegar URL Google Meet"><button class="btn btn-outline-primary" onclick="guardarMeet('${paciente.dni}', '${t.id}')">Enviar</button></div>`;
                     }
 
-                    return `<li class="list-group-item bg-light border mb-2">
-                        <div class="d-flex justify-content-between">
-                            <strong>🗓️ ${t.fecha} a las ${t.hora} (${t.modalidad})</strong>
-                            <button class="btn btn-sm btn-danger" onclick="cancelarTurno('${paciente.dni}', '${t.id}')">Cancelar Turno</button>
+                    return `<li class="list-group-item bg-light border-0 mb-3 rounded shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong class="text-secondary">🗓️ ${t.fecha} a las ${t.hora}hs <span class="badge bg-secondary ms-1">${t.modalidad}</span></strong>
+                            <button class="btn btn-sm btn-outline-danger px-3 rounded-pill" onclick="cancelarTurno('${paciente.dni}', '${t.id}')">Cancelar</button>
                         </div>
                         ${controlesAdicionales}
                     </li>`;
                 }).join('');
 
                 contenedor.innerHTML += `
-                    <div class="card mb-4 shadow-sm border-0">
+                    <div class="card mb-4 border-0 bg-white" style="border-left: 4px solid var(--primary-color) !important;">
                         <div class="card-body">
-                            <h5 class="text-primary">${paciente.apellido}, ${paciente.nombre} <small class="text-muted">(DNI: ${paciente.dni})</small></h5>
-                            <p class="small text-muted mb-3">Email Contacto: ${paciente.email || 'No registrado'}</p>
-                            
-                            <h6 class="fw-bold text-secondary">Turnos del Paciente:</h6>
-                            <ul class="list-group list-group-flush mb-3">${turnosList}</ul>
+                            <h5 class="text-primary mb-0">${paciente.apellido}, ${paciente.nombre}</h5>
+                            <p class="small text-muted mb-3">DNI: ${paciente.dni} | Correo: ${paciente.email || 'No registrado'}</p>
+                            <ul class="list-group list-group-flush">${turnosList}</ul>
                         </div>
                     </div>`;
             });
@@ -194,7 +197,7 @@
 
         window.guardarMeet = function(dniPaciente, idTurno) {
             const input = document.getElementById(`meet-${dniPaciente}-${idTurno}`);
-            if (!input.value.trim() || !input.value.startsWith('http')) return alert("Por favor, ingrese un enlace válido (http/https).");
+            if (!input.value.trim() || !input.value.startsWith('http')) return alert("Por favor, ingrese un enlace válido.");
 
             let usuarios = JSON.parse(localStorage.getItem('usuarios_hcs'));
             let paciente = usuarios.find(u => u.dni === dniPaciente);
@@ -206,7 +209,7 @@
         };
 
         window.cancelarTurno = function(dniPaciente, idTurno) {
-            if(!confirm("¿Está seguro de que desea cancelar este turno? El paciente será notificado en su panel.")) return;
+            if(!confirm("¿Está seguro de que desea cancelar este turno?")) return;
             
             let usuarios = JSON.parse(localStorage.getItem('usuarios_hcs'));
             let paciente = usuarios.find(u => u.dni === dniPaciente);

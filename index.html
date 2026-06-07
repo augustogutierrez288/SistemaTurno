@@ -6,25 +6,49 @@
     <title>Gestión de Turnos - HCS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { --primary-color: #0056b3; }
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+        /* Estética "Soft UI" - Menos fatiga visual */
+        :root { 
+            --primary-color: #4a90e2; 
+            --primary-hover: #357abd;
+            --bg-color: #f4f7f6;
+            --text-color: #2c3e50;
+            --card-shadow: 0 8px 24px rgba(0,0,0,0.04);
+        }
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color);
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+        }
         .navbar-custom { background-color: var(--primary-color); }
-        .navbar-custom .navbar-brand, .navbar-custom .nav-link { color: #ffffff !important; }
-        header.hero-section { background: linear-gradient(135deg, var(--primary-color), #00a8ff); color: white; padding: 3rem 0; margin-bottom: 2rem; }
-        .form-container { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link { color: #ffffff !important; opacity: 0.95; }
+        .navbar-custom .nav-link:hover { opacity: 1; }
+        header.hero-section { 
+            background: linear-gradient(135deg, #6ab0f3, var(--primary-color)); 
+            color: white; padding: 3.5rem 0; margin-bottom: 2rem; 
+            border-radius: 0 0 25px 25px; box-shadow: var(--card-shadow);
+        }
+        .form-container { 
+            background: #ffffff; padding: 2.5rem; border-radius: 16px; 
+            box-shadow: var(--card-shadow); border: 1px solid #eef2f5;
+        }
+        .btn-primary { background-color: var(--primary-color); border: none; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .form-control, .form-select { border-radius: 8px; border: 1px solid #dce4ec; color: var(--text-color); }
+        .form-control:focus, .form-select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.15); }
     </style>
 </head>
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="./index.html">🏥 HCS Tucumán</a>
+            <a class="navbar-brand fw-bold" href="index.html">🏥 HCS Tucumán</a>
             <button class="navbar-toggler border-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon" style="filter: invert(1);"></span></button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="./index.html">Inicio</a></li>
-                    <li class="nav-item d-none" id="navMisTurnos"><a class="nav-link" href="./pages/panel_paciente.html">🩺 Mis Turnos</a></li>
-                    <li class="nav-item" id="navLogin"><a class="nav-link" href="./pages/auth.html">Iniciar Sesión</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+                    <!-- Enrutamiento adaptado hacia la carpeta pages/ -->
+                    <li class="nav-item d-none" id="navMisTurnos"><a class="nav-link" href="pages/panel_paciente.html">🩺 Mis Turnos</a></li>
+                    <li class="nav-item" id="navLogin"><a class="nav-link" href="pages/auth.html">Iniciar Sesión</a></li>
                     <li class="nav-item d-none" id="navLogout"><a class="nav-link" href="#" onclick="cerrarSesion()">Cerrar Sesión</a></li>
                 </ul>
             </div>
@@ -34,6 +58,7 @@
     <header class="hero-section text-center">
         <div class="container">
             <h1 class="display-5 fw-bold">Solicitud de Turnos</h1>
+            <p class="lead opacity-75">Reserva tu cita de forma rápida y sencilla</p>
         </div>
     </header>
 
@@ -41,44 +66,54 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 
-                <div id="mensajeLogin" class="alert alert-warning text-center d-none">
-                    <h4>Debe iniciar sesión</h4>
-                    <p>Para solicitar un turno, por favor inicie sesión o regístrese.</p>
-                    <a href="./pages/auth.html" class="btn btn-primary">Ir a Iniciar Sesión</a>
+                <div id="mensajeLogin" class="alert alert-info text-center shadow-sm d-none border-0" style="background-color: #eaf3fc;">
+                    <h5 class="text-primary mt-2">Bienvenido al Portal</h5>
+                    <p class="text-muted">Para solicitar un turno médico, por favor inicie sesión o regístrese.</p>
+                    <a href="pages/auth.html" class="btn btn-primary px-4 py-2 mb-2">Ir a Iniciar Sesión</a>
                 </div>
 
                 <div class="form-container" id="contenedorFormulario" style="display: none;">
+                    <h4 class="mb-4 text-center text-primary fw-bold">Detalles de la Cita</h4>
                     <form id="formularioTurno">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Modalidad de Atención</label>
-                            <div class="d-flex gap-3">
+                        <div class="mb-4 bg-light p-3 rounded">
+                            <label class="form-label fw-bold text-secondary">1. Modalidad de Atención</label>
+                            <div class="d-flex gap-4 mt-2">
                                 <div class="form-check"><input class="form-check-input" type="radio" name="modalidad" id="modPresencial" value="Presencial" checked><label class="form-check-label" for="modPresencial">🏢 Presencial</label></div>
                                 <div class="form-check"><input class="form-check-input" type="radio" name="modalidad" id="modTelemedicina" value="Telemedicina"><label class="form-check-label" for="modTelemedicina">💻 Telemedicina</label></div>
                             </div>
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Turnos Disponibles</label>
+                            <label class="form-label fw-bold text-secondary">2. Seleccione un Turno Disponible</label>
                             <select class="form-select" id="turnoSeleccionado" required></select>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3"><label class="form-label">Nombre y Apellido</label><input type="text" class="form-control" id="nombreCompleto" readonly></div>
-                            <div class="col-md-6 mb-3"><label class="form-label">DNI</label><input type="text" class="form-control" id="dni" readonly></div>
+                        <div class="row mb-3">
+                            <label class="form-label fw-bold text-secondary mb-3">3. Verificación de Datos y Contacto</label>
+                            <div class="col-md-6 mb-3"><label class="form-label small">Nombre y Apellido</label><input type="text" class="form-control bg-light" id="nombreCompleto" readonly></div>
+                            <div class="col-md-6 mb-3"><label class="form-label small">DNI</label><input type="text" class="form-control bg-light" id="dni" readonly></div>
+                            <!-- Nuevo campo editable para cargar/modificar el Email a la hora de pedir el turno -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label small">Correo Electrónico para Notificaciones <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control border-primary" id="emailContacto" placeholder="ejemplo@correo.com" required>
+                                <div class="form-text">Enviaremos la confirmación del turno a esta dirección.</div>
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 btn-lg mt-2">Confirmar Turno</button>
+                        <button type="submit" class="btn btn-primary w-100 btn-lg mt-3 fw-bold">Agendar Turno Médico</button>
                     </form>
                 </div>
             </div>
         </div>
     </main>
 
+    <!-- Notificación Flotante Simulación de Correo -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="emailToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="emailToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
-                <div class="toast-body" id="emailToastBody">
-                    </div>
+                <div class="toast-body text-white" id="emailToastBody">
+                    <!-- Mensaje dinámico -->
+                </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
         </div>
@@ -98,9 +133,11 @@
                     document.getElementById('contenedorFormulario').style.display = 'block';
                     document.getElementById('nombreCompleto').value = `${sesion.nombre} ${sesion.apellido}`;
                     document.getElementById('dni').value = sesion.dni;
+                    // Precarga el email registrado, pero permite su edición
+                    document.getElementById('emailContacto').value = sesion.email || '';
                     cargarTurnosDisponibles();
                 } else {
-                    window.location.href = './pages/panel.html';
+                    window.location.href = 'pages/panel.html';
                 }
             } else {
                 document.getElementById('mensajeLogin').classList.remove('d-none');
@@ -110,43 +147,72 @@
         function cargarTurnosDisponibles() {
             const turnosDisponibles = JSON.parse(localStorage.getItem('turnos_disponibles_hcs')) || [];
             const select = document.getElementById('turnoSeleccionado');
-            select.innerHTML = '<option value="" selected disabled>Seleccione un turno...</option>';
+            select.innerHTML = '<option value="" selected disabled>Seleccione un turno de la agenda médica...</option>';
             
             if (turnosDisponibles.length === 0) {
-                select.innerHTML = '<option value="" disabled>No hay turnos disponibles.</option>';
+                select.innerHTML = '<option value="" disabled>No hay turnos disponibles por el momento.</option>';
                 return;
             }
 
             turnosDisponibles.forEach(turno => {
-                select.innerHTML += `<option value="${turno.id}">${turno.fecha} | ${turno.hora} - Dr/a. ${turno.doctorNombre} (${turno.especialidad})</option>`;
+                select.innerHTML += `<option value="${turno.id}">${turno.fecha} | ${turno.hora}hs - Dr/a. ${turno.doctorNombre} (${turno.especialidad})</option>`;
             });
+        }
+
+        // --- FUNCION SOLICITADA QUE RETORNA EL EMAIL DE CONFIRMACIÓN ---
+        function generarEmailConfirmacion(turno, emailDestino) {
+            const emailTemplate = {
+                destinatario: emailDestino,
+                asunto: "HCS - Confirmación de Turno Médico",
+                cuerpoHTML: `
+                    <strong>🏥 Confirmación Enviada</strong><br><br>
+                    Se notificó a: <u>${emailDestino}</u><br>
+                    Tienes un turno <strong>${turno.modalidad}</strong> reservado para el día <strong>${turno.fecha}</strong> a las <strong>${turno.hora}hs</strong>.<br>
+                    <strong>Profesional:</strong> Dr/a. ${turno.doctorNombre} (${turno.especialidad})
+                `
+            };
+            return emailTemplate;
         }
 
         document.getElementById('formularioTurno').addEventListener('submit', (e) => {
             e.preventDefault();
             const idTurno = document.getElementById('turnoSeleccionado').value;
             const modalidad = document.querySelector('input[name="modalidad"]:checked').value;
-            let turnos = JSON.parse(localStorage.getItem('turnos_disponibles_hcs')) || [];
+            const emailIngresado = document.getElementById('emailContacto').value;
             
+            let turnos = JSON.parse(localStorage.getItem('turnos_disponibles_hcs')) || [];
             const indice = turnos.findIndex(t => t.id === idTurno);
+            
             const turnoReservado = turnos.splice(indice, 1)[0];
             turnoReservado.modalidad = modalidad;
-            turnoReservado.estado = 'Activo'; // Estado para seguimiento
+            turnoReservado.estado = 'Activo';
 
-            // Guardar en paciente
             let usuarios = JSON.parse(localStorage.getItem('usuarios_hcs'));
             let pIndex = usuarios.findIndex(u => u.dni === sesion.dni);
+            
+            // Si el paciente cambió su email en este formulario, lo actualizamos en la DB
+            usuarios[pIndex].email = emailIngresado;
+            // Actualizamos la sesión actual en el LocalStorage
+            sesion.email = emailIngresado;
+            localStorage.setItem('sesion_actual', JSON.stringify(sesion));
+
             usuarios[pIndex].turnos.push(turnoReservado);
             localStorage.setItem('usuarios_hcs', JSON.stringify(usuarios));
             localStorage.setItem('turnos_disponibles_hcs', JSON.stringify(turnos));
 
-            // Simulación de envío de correo mediante Toast
-            const emailHtml = `📧 <strong>Enviando confirmación...</strong><br>Se notificó a <u>${sesion.email || 'tu correo'}</u>. Tienes un turno ${modalidad} el ${turnoReservado.fecha} a las ${turnoReservado.hora}.`;
-            document.getElementById('emailToastBody').innerHTML = emailHtml;
+            // Utilizamos la función para generar el contenido del correo
+            const emailData = generarEmailConfirmacion(turnoReservado, emailIngresado);
+            
+            // Simulación visual del envío
+            document.getElementById('emailToastBody').innerHTML = emailData.cuerpoHTML;
             new bootstrap.Toast(document.getElementById('emailToast')).show();
 
             cargarTurnosDisponibles();
             document.getElementById('formularioTurno').reset();
+            // Restaurar los campos de solo lectura
+            document.getElementById('nombreCompleto').value = `${sesion.nombre} ${sesion.apellido}`;
+            document.getElementById('dni').value = sesion.dni;
+            document.getElementById('emailContacto').value = sesion.email;
         });
 
         function cerrarSesion() { localStorage.removeItem('sesion_actual'); window.location.reload(); }
