@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Médico - Oncología | HCS</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --doctor-color: #0b5ed7;
+            --sidebar-bg: #212529;
+        }
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .navbar-doctor {
+            background-color: var(--sidebar-bg);
+        }
+        .paciente-card {
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            border: none;
+            margin-bottom: 1.5rem;
+            background: white;
+        }
+        .badge-diagnostico {
+            background-color: #f8f9fa;
+            border-left: 4px solid #dc3545;
+            color: #333;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95rem;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 12px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark navbar-doctor sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                👨‍⚕️ Panel de Control Médico - Oncología
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="navbar-text text-white me-3 d-none d-sm-inline">Hospital Centro de Salud</span>
+                <a href="auth.html" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="fw-bold text-dark">Seguimiento de Pacientes Asignados</h2>
+                <p class="text-muted">Consulte el historial clínico de los pacientes registrados y añada nuevas evoluciones médicas.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12" id="contenedorPacientes">
+                </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contenedorPacientes = document.getElementById('contenedorPacientes');
+
+            // Función para renderizar los pacientes en pantalla
+            const renderizarPacientes = () => {
+                // Obtener todos los usuarios del LocalStorage
+                const usuarios = JSON.parse(localStorage.getItem('usuarios_hcs')) || [];
+
+                // Si no hay pacientes registrados en el sistema
+                if (usuarios.length === 0) {
+                    contenedorPacientes.innerHTML = `
+                        <div class="empty-state shadow-sm">
+                            <h4 class="mb-2">No hay pacientes cargados en el sistema</h4>
+                            <p class="mb-0">Cuando los pacientes se registren desde el portal web, aparecerán listados aquí de forma automática.</p>
+                        </div>`;
+                    return;
+                }
+
+                // Limpiar contenedor antes de renderizar de nuevo
+                contenedorPacientes.innerHTML = '';
+
+                // Crear los componentes de interfaz por cada paciente
+                usuarios.forEach((paciente, index) => {
+                    
+                    // Procesar lista de diagnósticos previos
+                    let diagnosticosHtml = '';
+                    if (paciente.diagnosticos && paciente.diagnosticos.length > 0) {
+                        paciente.diagnosticos.forEach(diag => {
+                            diagnosticosHtml += `
+                                <div class="badge-diagnostico shadow-sm">
+                                    <small class="text-muted d-block">${diag.fecha}</small>
+                                    <strong>${diag.descripcion}</strong>
+                                </div>`;
+                        });
+                    } else {
+                        diagnosticosHtml = `<p class="text-muted italic flex-grow-1"><small>Sin registros clínicos previos cargados en este perfil.</small></p>`;
+                    }
+
+                    // Card de diseño para el paciente utilizando colapsables nativos de Bootstrap
+                    const card = document.createElement('div');
+                    card.className = 'card paciente-card';
+                    card.innerHTML = `
+                        <div class="card-body p-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-5">
+                                    <h4 class="fw-bold text-primary mb-1">${paciente.apellido}, ${paciente.nombre}</h4>
+                                    <p class="mb-0 text-muted"><strong>DNI:</strong> ${paciente.dni} | <strong>Especialidad:</strong> Oncología Clínica</p>
+                                </div>
+                                <div class="col-md-7 mt-3 mt-md-0 text-md-end">
+                                    <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${index}">
+                                        Ver Ficha Completa e Historial
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="collapse mt-4 pt-3 border-top" id="collapse-${index}">
+                                <div class="row">
+                                    
+                                    <div class="col-md-6 mb-4 mb-md-0">
+                                        <h5 class="fw-bold mb-3 text-secondary">Evolución Médica Posterior</h5>
+                                        <div class="pe-2" style="max-height: 250px; overflow-y: auto;">
+                                            ${diagnosticosHtml}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <h5 class="fw-bold mb-3 text-secondary">Añadir Nuevo Diagnóstico</h5>
+                                        <div class="bg-light p-3 rounded">
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-bold">Observación / Cuadro Clínico</label>
+                                                <textarea id="input-diag-${paciente.dni}" class="form-control form-control-sm" rows="3" placeholder="Escriba el diagnóstico de seguimiento aquí..."></textarea>
+                                            </div>
+                                            <button class="btn btn-danger btn-sm w-100 fw-bold" onclick="guardarNuevoDiagnostico('${paciente.dni}')">
+                                                Registrar en Historia Clínica
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    contenedorPacientes.appendChild(card);
+                });
+            };
+
+            // Función global expuesta para guardar el diagnóstico del paciente
+            window.guardarNuevoDiagnostico = (dniPaciente) => {
+                const inputTextArea = document.getElementById(`input-diag-${dniPaciente}`);
+                const textoDiagnostico = inputTextArea.value.trim();
+
+                if (textoDiagnostico === '') {
+                    alert('Por favor, redacte una descripción antes de intentar registrar el diagnóstico.');
+                    return;
+                }
+
+                // Buscar la base de datos de usuarios
+                let usuarios = JSON.parse(localStorage.getItem('usuarios_hcs')) || [];
+                
+                // Encontrar el índice del paciente objetivo
+                const indicePaciente = usuarios.findIndex(u => u.dni === dniPaciente);
+
+                if (indicePaciente !== -1) {
+                    // Si por algún motivo no estuviera inicializado el array
+                    if (!usuarios[indicePaciente].diagnosticos) {
+                        usuarios[indicePaciente].diagnosticos = [];
+                    }
+
+                    // Insertar objeto diagnóstico estructurado con fecha
+                    const fechaActual = new Date().toLocaleString('es-AR');
+                    usuarios[indicePaciente].diagnosticos.unshift({
+                        fecha: fechaActual,
+                        descripcion: textoDiagnostico
+                    });
+
+                    // Persistir la modificación en el almacenamiento
+                    localStorage.setItem('usuarios_hcs', JSON.stringify(usuarios));
+
+                    // Actualizar la interfaz reactivamente
+                    renderizarPacientes();
+                }
+            };
+
+            // Inicializar la carga de la pantalla
+            renderizarPacientes();
+        });
+    </script>
+</body>
+</html>
